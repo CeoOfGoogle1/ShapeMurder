@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Region : MonoBehaviour
 {
+
     [Header("Region Settings")]
     public List<Region> neighbors;
     public int team;
@@ -18,23 +19,25 @@ public class Region : MonoBehaviour
 
     [Header("Grow Settings")]
     public int growSize;
-    public float growSpeed;
     public float growTime;
+    public float growTimer = 0;
 
     [Header("Invader Settings")]
     public List<Army> invaders;
     public float fightSpeed;
     public float fightTime;
 
+    
+
     void Grow()
     {
         if (garrison.size >= cap) return;
 
-        growTime += growSpeed * Time.deltaTime;
-        if (growTime >= 10)
+        growTimer += Time.deltaTime;
+        if (growTimer >= growTime)
         {
             garrison.size += growSize;
-            growTime = 0;
+            growTimer = 0;
         }
     }
 
