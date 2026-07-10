@@ -1,16 +1,14 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Services.Matchmaker.Models;
 using UnityEngine;
 
-namespace ShapeMurder
-{
-    public class SessionManager : NetworkBehaviour
+    public class Session : NetworkBehaviour
     {
         [Header("Session Settings")]
-        [SerializeField] private int _maxPlayerCount;
-        [Header("Teams")]
-        [SerializeField] Team[] teams = new Team[8];
+        [SerializeField] private int limit;
+        [Header("Players")]
+        [SerializeField] Player[] players = new Player[8];
 
         public override void OnNetworkSpawn()
         {
@@ -36,7 +34,7 @@ namespace ShapeMurder
             }
             else
             {
-                teams[vacantSlotId.Value] = new Team(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV());
+                players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV(), null);
             }
         }
 
@@ -44,7 +42,7 @@ namespace ShapeMurder
         {
             if(!IsHost) return;
 
-            int index = Array.FindIndex(teams, team => team.NetworkId == networkId);
+            int index = Array.FindIndex(players, team => team.NetworkId == networkId);
             
             if(index == -1)
             { 
@@ -52,45 +50,47 @@ namespace ShapeMurder
             }
             else
             {
-                teams[index] = new Team();
+                players[index] = new Player();
             }
         }
 
         private int? FindFirstVacantTeamSlot()
         {
-            for (int i = 0; i < teams.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
-                if (teams[i].PlayerStatus == PlayerStatus.Empty)
+                if (players[i].PlayerStatus == PlayerStatus.Empty)
                 {
                     return i;
                 }
             }
-
             return null;
         }
     }
 
-    [System.Serializable] 
-    public struct Team
+    [Serializable] 
+    public struct Player
     {
         // Variables
         [SerializeField] private int id;
         [SerializeField] private ulong networkId;
         [SerializeField] private Color color;
+        [SerializeField] private List<Player> allies;
         [SerializeField] private PlayerStatus playerStatus;
 
         // Properties
         public int Id => id;
         public ulong NetworkId => networkId;
-        public Color Color => color; 
+        public Color Color => color;
+        public List<Player> Allies => allies;
         public PlayerStatus PlayerStatus => playerStatus;
         
         // this is a constructor, that puts in the data only once, when this struct is created
-        public Team(int id, ulong networkId, Color color)
+        public Player(int id, ulong networkId, Color color, List<Player> allies)
         {
             this.id = id;
             this.networkId = networkId;
             this.color = color;
+            this.allies = allies;
 
             playerStatus = PlayerStatus.Connected;
         }
@@ -102,6 +102,3 @@ namespace ShapeMurder
         Disconnected,
         Connected
     }
-}
-
-

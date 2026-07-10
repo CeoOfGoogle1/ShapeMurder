@@ -3,19 +3,19 @@ using UnityEngine;
 
 public class Region : MonoBehaviour
 {
-
     [Header("Region Settings")]
     public List<Region> neighbors;
-    public int team;
+    public Player player;
     public Army garrison;
-    public int cap;
+    public List<Army> visitors;
+    public int limit;
 
     [Header("Send Settings")]
     public GameObject army;
     public Region destination;
     public int sendSize;
-    public float sendSpeed;
     public float sendTime;
+    public float sendTimer = 0;
 
     [Header("Grow Settings")]
     public int growSize;
@@ -27,11 +27,9 @@ public class Region : MonoBehaviour
     public float fightSpeed;
     public float fightTime;
 
-    
-
     void Grow()
     {
-        if (garrison.size >= cap) return;
+        if (garrison.size >= limit) return;
 
         growTimer += Time.deltaTime;
         if (growTimer >= growTime)
@@ -43,30 +41,35 @@ public class Region : MonoBehaviour
 
     void Send()
     {
-        sendTime += sendSpeed * Time.deltaTime;
-        if (sendTime >= 10)
+        sendTimer += Time.deltaTime;
+        if (sendTimer >= sendTime)
         {
             GameObject unit = Instantiate(army, transform.position, Quaternion.identity);
             Army stats = unit.GetComponent<Army>();
             garrison.size -= sendSize;
-            stats.team = team;
+            stats.player = player;
             stats.origin = this;
             stats.destination = destination;
             stats.size = sendSize;
-            sendTime = 0;
+            sendTimer = 0;
         }
     }
 
     public void ReceiveArmy(Army army)
     {
-        if (army.team == team)
+        if (army.player.Equals(player))
         {
-            if (garrison.size >= cap)
+            if (garrison.size >= limit)
             {
-                RetreatParty(army);
+                RetreatArmy(army);
             }
             garrison.size += army.size;
             Destroy(army.gameObject);
+        }
+        else if (player.Allies.Contains(army.player))
+        {
+            visitors.Add(army);
+            army.gameObject.SetActive(false);
         }
         else
         {
@@ -96,9 +99,17 @@ public class Region : MonoBehaviour
             }
         }
 
-        if (garrison.size <= 0 && invaders.Count == 1)
+        foreach (var visitor in visitors)
         {
-            team = invaders[0].team;
+            if (visitor.size <= 0)
+            {
+                Destroy(visitor.gameObject);
+            }
+        }
+
+        if (garrison.size <= 0 && invaders.Count == 1 && visitors.Count < 1)
+        {
+            player = invaders[0].player;
             garrison.size = invaders[0].size;
             Destroy(invaders[0].gameObject);
         }
@@ -111,7 +122,7 @@ public class Region : MonoBehaviour
         if (invaders.Count > 0) Fight();
     }
 
-    public void RetreatParty(Army army)
+    public void RetreatArmy(Army army)
     {
         invaders.Remove(army);
         army.retreating = true;
