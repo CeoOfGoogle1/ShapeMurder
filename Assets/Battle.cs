@@ -4,79 +4,108 @@ using UnityEngine;
 public class Battle : MonoBehaviour
 {
     [Header("Battle Settings")]
-    public List<Army> armies;
+    public List<Side> sides;
     public float fightTime;
     public float fightTimer;
     public bool ended;
 
     void Update()
     {
-        foreach (var army in armies)
+        foreach (var side in sides)
         {
-            if (army.size <= 0)
+            foreach (var army in side.armies)
             {
-                Destroy(army.gameObject);
+                if (army.size <= 0)
+                {
+                    side.armies.Remove(army);
+                    Destroy(army.gameObject);
+                }
             }
         }
 
-        if (armies.Count < 1)
-        {
-            Destroy(gameObject);
-        }
-
-        if (armies.Count == 1)
-        {
-            armies[0].gameObject.SetActive(true);
-            Destroy(gameObject);
-        }
+        sides.RemoveAll(s => s.armies.Count == 0);
+        ended = sides.Count <= 1;
 
         if (ended)
         {
-            foreach(var army in armies)
+            foreach(var army in sides[0].armies)
             {
                 army.gameObject.SetActive(true);
             }
             Destroy(gameObject);
         }
 
-        foreach (var army in armies)
-        {
-            Army a = army;
-            foreach (var b in armies)
-            {
-                if (a != b)
-                {
-                    if (!a.player.Allies.Contains(b.player))
-                    {
-                        ended = false;
-                    }
-                    else
-                    {
-                        ended = true;
-                    }
-                }
-            }
-        }
+        Fight();
+    }
 
+    void Fight()
+    {
         fightTimer += Time.deltaTime;
         if (fightTimer >= fightTime)
         {
-            foreach (var army in armies) army.size--;
+            foreach (var side in sides)
+            {
+                foreach (var army in side.armies)
+                {
+                    army.size--;
+                }
+            }
             fightTimer = 0;
         }
     }
 
     public void ReceiveArmy(Army army)
     {
-        armies.Add(army);
-        army.gameObject.SetActive(false);
+        List<Side> validSides = new();
+
+        foreach (var side in sides)
+        {
+            if (side.IsFriendlyWith(army.player))
+            {
+                validSides.Add(side);
+            }
+        }
+
+        if (validSides.Count == 0)
+        {
+            Side newSide = new Side();
+            newSide.armies.Add(army);
+            sides.Add(newSide);
+            army.gameObject.SetActive(false);
+        }
+        else if (validSides.Count == 1)
+        {
+            validSides[0].armies.Add(army);
+            army.gameObject.SetActive(false);
+        }
+        else
+        {
+            army.retreating = true;
+        }
     }
 
     public void RetreatArmy(Army army)
     {
-        armies.Remove(army);
+        foreach (var side in sides) side.armies.Remove(army);
         army.retreating = true;
         army.gameObject.SetActive(true);
         army.size--;
+    }
+}
+
+[System.Serializable]
+public class Side
+{
+    public List<Army> armies = new();
+
+    public bool IsFriendlyWith(Player player)
+    {
+        foreach (var army in armies)
+        {
+            if (army.player.Equals(player)) continue;
+
+            if (!army.player.Allies.Contains(player)) return false;
+        }
+        return true;
     }
 }
