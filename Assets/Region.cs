@@ -22,7 +22,7 @@ public class Region : MonoBehaviour
     public float growTime;
 
     [Header("Invader Settings")]
-    public Army invader;
+    public List<Army> invaders;
     public float fightSpeed;
     public float fightTime;
 
@@ -54,23 +54,21 @@ public class Region : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        Grow();
-        if (garrison.size >= sendSize && destination != null) Send();
-        if (invader != null) Fight();
-    }
-
     public void ReceiveArmy(Army army)
     {
         if (army.team == team)
         {
-            garrison.size += army.size; 
+            if (garrison.size >= cap)
+            {
+                RetreatParty(army);
+            }
+            garrison.size += army.size;
+            Destroy(army.gameObject);
         }
         else
         {
-            invader.team = army.team;
-            invader.size = army.size;
+            invaders.Add(army);
+            army.gameObject.SetActive(false);
         }
     }
 
@@ -80,14 +78,41 @@ public class Region : MonoBehaviour
         if (fightTime >= 10)
         {
             garrison.size -= 1;
-            invader.size -= 1;
+            foreach (var invader in invaders)
+            {
+                invader.size--;
+            }
             fightTime = 0;
         }
 
-        if (garrison.size <= 0)
+        foreach (var invader in invaders)
         {
-            team = invader.team;
-            garrison.size = invader.size;
+            if (invader.size <= 0)
+            {
+                Destroy(invader.gameObject);
+            }
         }
+
+        if (garrison.size <= 0 && invaders.Count == 1)
+        {
+            team = invaders[0].team;
+            garrison.size = invaders[0].size;
+            Destroy(invaders[0].gameObject);
+        }
+    }
+
+    void Update()
+    {
+        Grow();
+        if (garrison.size >= sendSize && destination != null) Send();
+        if (invaders.Count > 0) Fight();
+    }
+
+    public void RetreatParty(Army army)
+    {
+        invaders.Remove(army);
+        army.retreating = true;
+        army.gameObject.SetActive(true);
+        army.size--;
     }
 }

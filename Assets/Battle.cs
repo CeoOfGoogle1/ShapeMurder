@@ -42,4 +42,12 @@ public class Battle : MonoBehaviour
         parties.Add(party);
         party.gameObject.SetActive(false);
     }
+
+    public void RetreatParty(Army party)
+    {
+        parties.Remove(party);
+        party.retreating = true;
+        party.gameObject.SetActive(true);
+        party.size--;
+    }
 }
