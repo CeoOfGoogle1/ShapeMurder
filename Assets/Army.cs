@@ -3,7 +3,7 @@ using UnityEngine;
 public class Army : MonoBehaviour
 {
     [Header("Army Settings")]
-    public int team;
+    public Player player;
     public Region origin;
     public Region destination;
     public int size;
@@ -12,7 +12,7 @@ public class Army : MonoBehaviour
     public bool fighting;
     public bool retreating;
     bool previousRetreating;
-    float retreatingTime;
+    float retreatingTimer;
     bool cantCollide;
     void Update()
     {
@@ -33,12 +33,12 @@ public class Army : MonoBehaviour
 
         if (cantCollide)
         {
-            if (retreatingTime >= 1)
+            if (retreatingTimer >= 1)
             {
                 cantCollide = false;
-                retreatingTime = 0;
+                retreatingTimer = 0;
             }
-            retreatingTime += 1 * Time.deltaTime;
+            retreatingTimer += 1 * Time.deltaTime;
         }
     }
 
@@ -55,15 +55,15 @@ public class Army : MonoBehaviour
         Battle combat = collision.gameObject.GetComponent<Battle>();
         if (combat != null)
         {
-            combat.ReceiveParty(this);
+            combat.ReceiveArmy(this);
         }
 
         Army other = collision.gameObject.GetComponent<Army>();
-        if (other == null || other.fighting || other.team == team) return;
+        if (other == null || other.fighting || other.player.Equals(player)) return;
         fighting = true;
         
         GameObject newBattle = Instantiate(battle, transform.position, Quaternion.identity);
         Battle stats = newBattle.GetComponent<Battle>();
-        stats.ReceiveParty(this);
+        stats.ReceiveArmy(this);
     }
 }
