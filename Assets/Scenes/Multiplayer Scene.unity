@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 512845083}
   - component: {fileID: 512845081}
   m_Layer: 0
-  m_Name: SessionManager
+  m_Name: Session
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,39 +150,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SessionManager
   ShowTopMostFoldoutHeaderGroup: 1
-  _maxPlayerCount: 0
-  teams:
+  limit: 0
+  players:
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
   - id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
+    allies: []
     playerStatus: 0
 --- !u!4 &512845082
 Transform:
