@@ -12,17 +12,17 @@ using UnityEngine;
 
         public override void OnNetworkSpawn()
         {
-            NetworkManager.Singleton.OnClientConnectedCallback += AddToTeamList;
-            NetworkManager.Singleton.OnClientDisconnectCallback -= RemoveFromTeamList;
+            NetworkManager.Singleton.OnClientConnectedCallback += AddToPlayerList;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= RemoveFromPlayerList;
         }
 
         public override void OnNetworkDespawn()
         {
-            NetworkManager.Singleton.OnClientConnectedCallback -= AddToTeamList;
-            NetworkManager.Singleton.OnClientDisconnectCallback -= RemoveFromTeamList;
+            NetworkManager.Singleton.OnClientConnectedCallback -= AddToPlayerList;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= RemoveFromPlayerList;
         }
 
-        public void AddToTeamList(ulong networkId)
+        public void AddToPlayerList(ulong networkId)
         {
             if(!IsHost) return;
 
@@ -35,10 +35,12 @@ using UnityEngine;
             else
             {
                 players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV(), null);
+
+                SendPlayerDataToClients(players);
             }
         }
 
-        public void RemoveFromTeamList(ulong networkId)
+        public void RemoveFromPlayerList(ulong networkId)
         {
             if(!IsHost) return;
 
@@ -51,6 +53,8 @@ using UnityEngine;
             else
             {
                 players[index] = new Player();
+
+                SendPlayerDataToClients(players);
             }
         }
 
@@ -64,6 +68,14 @@ using UnityEngine;
                 }
             }
             return null;
+        }
+
+        [ClientRpc]
+        private void SendPlayerDataToClients(Player[] players)
+        {
+            if(!IsHost) return;
+
+            this.players = players;
         }
     }
 
