@@ -7,11 +7,11 @@ public class Region : MonoBehaviour
     public List<Region> neighbors;
     public Player player;
     public Army garrison;
-    public List<Army> visitors;
+    private Dictionary<int, Army> visitors = new();
     public int limit;
 
     [Header("Send Settings")]
-    public GameObject army;
+    public GameObject newArmy;
     public Region destination;
     public int sendSize;
     public float sendTime;
@@ -22,10 +22,8 @@ public class Region : MonoBehaviour
     public float growTime;
     public float growTimer = 0;
 
-    [Header("Invader Settings")]
-    public List<Army> invaders;
-    public float fightSpeed;
-    public float fightTime;
+    [Header("Invasion Settings")]
+    public Battle battle;
 
     void Grow()
     {
@@ -44,74 +42,82 @@ public class Region : MonoBehaviour
         sendTimer += Time.deltaTime;
         if (sendTimer >= sendTime)
         {
-            GameObject unit = Instantiate(army, transform.position, Quaternion.identity);
-            Army stats = unit.GetComponent<Army>();
+            Army sent = new Army(player, sendSize, 1);
             garrison.size -= sendSize;
-            stats.player = player;
-            stats.origin = this;
-            stats.destination = destination;
-            stats.size = sendSize;
+            Mover.Spawn(newArmy, sent, transform.position, this, destination);
             sendTimer = 0;
         }
     }
 
-    public void ReceiveArmy(Army army)
+    public bool SendVisitor(Player visitorPlayer, int amount, Region destination)
     {
-        if (army.player.Equals(player))
+        if (!visitors.TryGetValue(visitorPlayer.Id, out Army visitor)) return false;
+        if (amount <= 0 || amount > visitor.size) return false;
+
+        Army sent = new Army(visitorPlayer, amount, visitor.speed);
+        visitor.size -= amount;
+        if (visitor.size <= 0) visitors.Remove(visitorPlayer.Id);
+
+        Mover.Spawn(newArmy, sent, transform.position, this, destination);
+        return true;
+    }
+
+    public void ReceiveMover(Mover mover)
+    {
+        if (mover.army.player.Equals(player))
         {
             if (garrison.size >= limit)
             {
-                RetreatArmy(army);
+                mover.retreating = true;
             }
-            garrison.size += army.size;
-            Destroy(army.gameObject);
+            else
+            {
+                garrison.size += mover.army.size;
+                Destroy(mover.gameObject);
+            }
         }
-        else if (player.Allies.Contains(army.player))
+        else if (player.Allies.Contains(mover.army.player.Id))
         {
-            visitors.Add(army);
-            army.gameObject.SetActive(false);
+            if (!visitors.TryGetValue(mover.army.player.Id, out Army visitor))
+            {
+                visitors.Add(mover.army.player.Id, mover.army);
+                Destroy(mover.gameObject);
+            }
+            else if (visitor.size < limit)
+            {
+                visitor.size += mover.army.size;
+                Destroy(mover.gameObject);
+            }
+            else
+            {
+                mover.retreating = true;
+            }
         }
         else
         {
-            invaders.Add(army);
-            army.gameObject.SetActive(false);
-        }
-    }
-
-    void Fight()
-    {
-        fightTime += fightSpeed * Time.deltaTime;
-        if (fightTime >= 10)
-        {
-            garrison.size -= 1;
-            foreach (var invader in invaders)
+            if (battle == null)
             {
-                invader.size--;
-            }
-            fightTime = 0;
-        }
+                battle = gameObject.AddComponent<Battle>();
 
-        foreach (var invader in invaders)
-        {
-            if (invader.size <= 0)
+                // Seed both sides directly from data (no Mover needed for garrison).
+                battle.SeedSide(mover.army);
+                battle.SeedSide(garrison);
+
+                // Each visitor decides for itself which side (if any) it belongs to.
+                // If it's allied with both attacker and defender, SeedSide returns false
+                // and it stays behind in the region, untouched by the battle.
+                foreach (var kvp in new List<KeyValuePair<int, Army>>(visitors))
+                {
+                    if (battle.SeedSide(kvp.Value)) visitors.Remove(kvp.Key);
+                }
+
+                Destroy(mover.gameObject);
+            }
+            else
             {
-                Destroy(invader.gameObject);
+                bool consumed = battle.ReceiveMover(mover);
+                if (consumed) Destroy(mover.gameObject); // only destroy if it actually joined a side
             }
-        }
-
-        foreach (var visitor in visitors)
-        {
-            if (visitor.size <= 0)
-            {
-                Destroy(visitor.gameObject);
-            }
-        }
-
-        if (garrison.size <= 0 && invaders.Count == 1 && visitors.Count < 1)
-        {
-            player = invaders[0].player;
-            garrison.size = invaders[0].size;
-            Destroy(invaders[0].gameObject);
         }
     }
 
@@ -119,14 +125,12 @@ public class Region : MonoBehaviour
     {
         Grow();
         if (garrison.size >= sendSize && destination != null) Send();
-        if (invaders.Count > 0) Fight();
     }
 
-    public void RetreatArmy(Army army)
+    public void SwitchTo(Player player, Army army)
     {
-        invaders.Remove(army);
-        army.retreating = true;
-        army.gameObject.SetActive(true);
-        army.size--;
+        this.player = player;
+        garrison = army;
+        battle = null;
     }
 }
