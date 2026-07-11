@@ -86,18 +86,18 @@ using UnityEngine;
         [SerializeField] private int id;
         [SerializeField] private ulong networkId;
         [SerializeField] private Color color;
-        [SerializeField] private List<Player> allies;
+        [SerializeField] private List<int> allies;
         [SerializeField] private PlayerStatus playerStatus;
 
         // Properties
         public int Id => id;
         public ulong NetworkId => networkId;
         public Color Color => color;
-        public List<Player> Allies => allies;
+        public List<int> Allies => allies;
         public PlayerStatus PlayerStatus => playerStatus;
         
         // this is a constructor, that puts in the data only once, when this struct is created
-        public Player(int id, ulong networkId, Color color, List<Player> allies)
+        public Player(int id, ulong networkId, Color color, List<int> allies)
         {
             this.id = id;
             this.networkId = networkId;
