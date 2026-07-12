@@ -3,27 +3,22 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     public Army army;
-    public Region origin;
-    public Region destination;
     public bool retreating;
     bool previousRetreating;
     float retreatingTimer;
     bool cantCollide;
-    public GameObject battle;
+    public GameObject battlePrefab;
 
     void Update()
     {
-        Vector3 direction = destination.transform.position - transform.position;
+        Vector3 direction = army.destination.transform.position - transform.position;
         if (retreating)
         {
-            direction = origin.transform.position - transform.position;
+            direction = army.origin.transform.position - transform.position;
         }
         transform.position += direction.normalized * army.speed * Time.deltaTime;
 
-        if (retreating != previousRetreating)
-        {
-            if (retreating) cantCollide = true;
-        }
+        if (retreating != previousRetreating) if (retreating) cantCollide = true;
         previousRetreating = retreating;
 
         if (cantCollide)
@@ -42,16 +37,10 @@ public class Mover : MonoBehaviour
         if (cantCollide) return;
 
         Battle combat = collision.gameObject.GetComponent<Battle>();
-        if (combat != null)
-        {
-            combat.ReceiveMover(this);
-        }
+        if (combat != null) combat.ReceiveMover(this);
 
         Region region = collision.gameObject.GetComponent<Region>();
-        if (region != null)
-        {
-            region.ReceiveMover(this);
-        }
+        if (region != null) region.ReceiveMover(this);
 
         Mover other = collision.gameObject.GetComponent<Mover>();
         if (other == null || other.army.player.Allies.Contains(army.player.Id)) return;
@@ -60,29 +49,30 @@ public class Mover : MonoBehaviour
         // otherwise you'd spin up two separate Battles from one collision.
         if (GetInstanceID() > other.GetInstanceID()) return;
         
-        GameObject newBattle = Instantiate(battle, transform.position, Quaternion.identity);
-        Battle stats = newBattle.GetComponent<Battle>();
-        stats.ReceiveMover(other);
-        stats.ReceiveMover(this);
+        GameObject newBattle = Instantiate(battlePrefab, transform.position, Quaternion.identity);
+        Battle battle = newBattle.GetComponent<Battle>();
+        battle.ReceiveMover(other);
+        battle.ReceiveMover(this);
 
-        bool otherConsumed = stats.ReceiveMover(other);
-        bool thisConsumed = stats.ReceiveMover(this);
+        bool otherConsumed = battle.ReceiveMover(other);
+        bool thisConsumed = battle.ReceiveMover(this);
         if (otherConsumed) Destroy(other.gameObject);
         if (thisConsumed) Destroy(gameObject);
     }
 
-    // The one place a Mover GameObject comes into existence for an existing Army.
-    // Region.Send/SendVisitor and Battle's post-fight respawn all funnel through here,
-    // so there's exactly one path that creates a moving unit and exactly one rule
-    // for destroying it (whenever it stops moving under its own power).
     public static Mover Spawn(GameObject prefab, Army army, Vector3 position, Region origin, Region destination)
     {
         GameObject unit = Instantiate(prefab, position, Quaternion.identity);
         Mover mover = unit.GetComponent<Mover>();
         mover.army = army;
-        mover.origin = origin;
-        mover.destination = destination;
+        mover.army.origin = origin;
+        mover.army.destination = destination;
         return mover;
+    }
+
+    void OnMouseOver()
+    {
+        if (Input.GetKey(KeyCode.Mouse0)) retreating = true;
     }
 }
 
@@ -93,11 +83,15 @@ public class Army
     public Player player;
     public int size;
     public float speed;
+    public Region origin;
+    public Region destination;
 
-    public Army(Player player, int size, float speed)
+    public Army(Player player, int size, float speed, Region origin, Region destination)
     {
         this.player = player;
         this.size = size;
         this.speed = speed;
+        this.origin = origin;
+        this.destination = destination;
     }
 }
