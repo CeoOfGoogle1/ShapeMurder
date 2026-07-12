@@ -36,7 +36,7 @@ using UnityEngine;
             {
                 players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV(), null);
 
-                SendPlayerDataToClients(players);
+                //SendPlayerDataToClients(players);
             }
         }
 
@@ -54,7 +54,7 @@ using UnityEngine;
             {
                 players[index] = new Player();
 
-                SendPlayerDataToClients(players);
+                //SendPlayerDataToClients(players);
             }
         }
 
@@ -69,14 +69,14 @@ using UnityEngine;
             }
             return null;
         }
-
+        /*
         [ClientRpc]
         private void SendPlayerDataToClients(Player[] players)
         {
             if(!IsHost) return;
 
             this.players = players;
-        }
+        }*/
     }
 
     [Serializable] 
