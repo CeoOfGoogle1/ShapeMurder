@@ -4,6 +4,8 @@ using UnityEngine;
 public class Region : MonoBehaviour
 {
     [Header("Region Settings")]
+    public bool selected;
+    public bool highlighted;
     public int id;
     public RegionType type;
     public List<Region> neighbors;
@@ -34,6 +36,16 @@ public class Region : MonoBehaviour
             if (Tick(ref sendTimer, sendTime)) SendArmy(garrison, sendSize, destination);
         }
         Grow();
+
+        if (selected)
+        {
+            
+        }
+
+        if (highlighted)
+        {
+            
+        }
     }
 
     void Grow()
@@ -117,4 +129,5 @@ public class Region : MonoBehaviour
 public class RegionType
 {
     public int cost;
+    public int gain;
 }

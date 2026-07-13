@@ -69,11 +69,6 @@ public class Mover : MonoBehaviour
         mover.army.destination = destination;
         return mover;
     }
-
-    void OnMouseOver()
-    {
-        if (Input.GetKey(KeyCode.Mouse0)) retreating = true;
-    }
 }
 
 [System.Serializable]
