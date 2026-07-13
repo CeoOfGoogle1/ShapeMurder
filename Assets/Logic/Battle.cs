@@ -24,11 +24,11 @@ public class Battle : MonoBehaviour
         }
 
         ended = sides.Count == 1;
-        if (ended) ResolveBattle();
+        if (ended) Win();
         else if (Tick(ref fightTimer, fightTime)) Fight(sides);
     }
 
-    void ResolveBattle()
+    void Win()
     {
         Side winner = sides[0];
         Region region = GetComponent<Region>();
