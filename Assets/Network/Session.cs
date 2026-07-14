@@ -11,6 +11,7 @@ public class Session : NetworkBehaviour
     [SerializeField] int maxPlayerCount = 8;
     [SerializeField] Player[] players;
     public Player[] Players => players;
+    public int MaxPlayerCount => maxPlayerCount;
 
     private void Awake()
     {
@@ -37,7 +38,7 @@ public class Session : NetworkBehaviour
         if(!IsHost) return;
 
         this.players = players;
-        
+
     }
 
     private Player GetPlayerDataById(int id)
@@ -51,7 +52,7 @@ public class Session : NetworkBehaviour
         }
 
         Debug.LogError("Player not found by id");
-        return new Player(-1, 0, Color.navajoWhite);
+        return new Player(-1, 0, Color.navajoWhite, 0);
     }
 
     public override void OnNetworkSpawn()
@@ -78,7 +79,7 @@ public class Session : NetworkBehaviour
         }
         else
         {
-            players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV());
+            players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV(), MaxPlayerCount);
 
             SendPlayerDataToClientsClientRpc(players);
         }
@@ -117,7 +118,7 @@ public class Session : NetworkBehaviour
 }
 
 [Serializable] 
-public struct Player
+public struct Player : INetworkSerializable
 {
     // Variables
     [SerializeField] private int id;
@@ -134,14 +135,23 @@ public struct Player
     public PlayerStatus PlayerStatus => playerStatus;
 
     // this is a constructor, that puts in the data only once, when this struct is created
-    public Player(int id, ulong networkId, Color color)
+    public Player(int id, ulong networkId, Color color, int maxPlayerCount)
     {
         this.id = id;
         this.networkId = networkId;
         this.color = color;
 
-        allies = new int[3];
+        allies = new int[maxPlayerCount];
         playerStatus = PlayerStatus.Connected;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref id);
+        serializer.SerializeValue(ref networkId);
+        serializer.SerializeValue(ref color);
+        serializer.SerializeValue(ref allies);
+        serializer.SerializeValue(ref playerStatus);
     }
 }
 
