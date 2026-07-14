@@ -37,6 +37,7 @@ public class Session : NetworkBehaviour
         if(!IsHost) return;
 
         this.players = players;
+        
     }
 
     private Player GetPlayerDataById(int id)
