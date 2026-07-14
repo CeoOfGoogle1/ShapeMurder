@@ -5,31 +5,10 @@ using UnityEngine;
 
     public class Session : NetworkBehaviour
     {
-        public static Session Instance { get; private set; }
-
+        [Header("Session Settings")]
+        [SerializeField] private int limit;
         [Header("Players")]
-        [SerializeField] int maxPlayerCount = 8;
-        [SerializeField] Player[] players;
-        public Player[] Players => players;
-
-        private void Awake()
-        {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            players = new Player[maxPlayerCount];
-        }
-
-        public override void OnDestroy()
-        {
-            if (Instance == this)
-                Instance = null;
-        }
+        [SerializeField] Player[] players = new Player[8];
 
         public override void OnNetworkSpawn()
         {
@@ -55,9 +34,9 @@ using UnityEngine;
             }
             else
             {
-                players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV());
+                players[vacantSlotId.Value] = new Player(vacantSlotId.Value, networkId, UnityEngine.Random.ColorHSV(), null);
 
-                SendPlayerDataToClientsClientRpc(players);
+                SendPlayerDataToClients(players);
             }
         }
 
@@ -75,7 +54,7 @@ using UnityEngine;
             {
                 players[index] = new Player();
 
-                SendPlayerDataToClientsClientRpc(players);
+                SendPlayerDataToClients(players);
             }
         }
 
@@ -92,25 +71,11 @@ using UnityEngine;
         }
 
         [ClientRpc]
-        private void SendPlayerDataToClientsClientRpc(Player[] players)
+        private void SendPlayerDataToClients(Player[] players)
         {
             if(!IsHost) return;
 
             this.players = players;
-        }
-
-        private Player GetPlayerDataById(int id)
-        {
-            foreach (Player player in players)
-            {
-                if (player.Id == id)
-                {
-                    return player;
-                }
-            }
-
-            Debug.LogError("Player not found by id");
-            return new Player(-1, 0, Color.navajoWhite);
         }
     }
 
@@ -121,24 +86,24 @@ using UnityEngine;
         [SerializeField] private int id;
         [SerializeField] private ulong networkId;
         [SerializeField] private Color color;
-        [SerializeField] private int[] allies;
+        [SerializeField] private List<Player> allies;
         [SerializeField] private PlayerStatus playerStatus;
 
         // Properties
         public int Id => id;
         public ulong NetworkId => networkId;
         public Color Color => color;
-        public int[] Allies => allies;
+        public List<Player> Allies => allies;
         public PlayerStatus PlayerStatus => playerStatus;
         
         // this is a constructor, that puts in the data only once, when this struct is created
-        public Player(int id, ulong networkId, Color color)
+        public Player(int id, ulong networkId, Color color, List<Player> allies)
         {
             this.id = id;
             this.networkId = networkId;
             this.color = color;
-            
-            allies = new int[3];
+            this.allies = allies;
+
             playerStatus = PlayerStatus.Connected;
         }
     }
