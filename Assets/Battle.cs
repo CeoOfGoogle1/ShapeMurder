@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Battle : MonoBehaviour
@@ -104,7 +105,7 @@ public class Side
         {
             if (army.player.Equals(player)) continue;
 
-            if (!army.player.Allies.Contains(player)) return false;
+            if (!army.player.Allies.Contains(player.Id)) return false;
         }
         return true;
     }

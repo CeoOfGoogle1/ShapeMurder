@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
 using UnityEngine;
 
 public class Region : MonoBehaviour
@@ -66,7 +68,7 @@ public class Region : MonoBehaviour
             garrison.size += army.size;
             Destroy(army.gameObject);
         }
-        else if (player.Allies.Contains(army.player))
+        else if (player.Allies.Contains(army.player.Id))
         {
             visitors.Add(army);
             army.gameObject.SetActive(false);
