@@ -32,7 +32,7 @@ public class Region : MonoBehaviour
 
     void Update()
     {   
-        if (garrison.size >= sendSize && destination != null)
+        if (garrison.size >= sendSize && destination != null && destination.garrison.size < destination.limit)
         {
             if (Tick(ref sendTimer, sendTime)) SendArmy(garrison, sendSize, destination);
         }
@@ -74,7 +74,7 @@ public class Region : MonoBehaviour
 
     public void ReceiveMover(Mover mover)
     {
-        if (mover.army.player.Equals(player))
+        if (mover.army.player.Id == player.Id)
         {
             if (garrison.size >= limit) mover.retreating = true;
             else
@@ -101,12 +101,14 @@ public class Region : MonoBehaviour
         {
             battle = gameObject.AddComponent<Battle>();
             battle.ReceiveMover(mover);
+            Destroy(mover.gameObject);
             battle.ReceiveArmy(garrison);
+            battle.moverPrefab = moverPrefab;
+            battle.fightTime = moverPrefab.GetComponent<Mover>().battlePrefab.GetComponent<Battle>().fightTime;
             foreach (var kvp in new List<KeyValuePair<int, Army>>(visitors))
             {
                 if (battle.ReceiveArmy(kvp.Value)) visitors.Remove(kvp.Key);
             }
-            Destroy(mover.gameObject);
         }
         else if (battle.ReceiveMover(mover)) Destroy(mover.gameObject);
     }
@@ -116,6 +118,7 @@ public class Region : MonoBehaviour
         this.player = player;
         garrison = army;
         battle = null;
+        destination = null;
     }
 
     bool Tick(ref float timer, float interval)

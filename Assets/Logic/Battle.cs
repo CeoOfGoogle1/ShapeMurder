@@ -5,7 +5,7 @@ using UnityEngine;
 public class Battle : MonoBehaviour
 {
     [Header("Battle Settings")]
-    public List<Side> sides;
+    public List<Side> sides = new List<Side>();
     public float fightTime;
     public float fightTimer;
     public bool ended;
@@ -24,7 +24,7 @@ public class Battle : MonoBehaviour
             Destroy(gameObject);
         }
 
-        ended = sides.Count == 1;
+        if (sides.Count == 1) ended = true;
         if (ended) Win();
         else if (Tick(ref fightTimer, fightTime)) Fight(sides);
     }
@@ -42,7 +42,7 @@ public class Battle : MonoBehaviour
 
             foreach (var army in winner.armies)
             {
-                if (army == leader) return;
+                if (army == leader) continue;
                 Mover.Spawn(moverPrefab, army, transform.position, army.origin, army.destination);
             }
             region.SwitchTo(leader.player, new Army(leader.player, leader.size, leader.speed, null, null));
@@ -72,7 +72,11 @@ public class Battle : MonoBehaviour
 
     public bool ReceiveMover(Mover mover)
     {
-        if (ReceiveArmy(mover.army)) return true;
+        if (ReceiveArmy(mover.army))
+        {
+            Destroy(mover.gameObject);
+            return true;
+        }
         mover.retreating = true; //allied with two or more sides
         return false;
     }
@@ -122,9 +126,15 @@ public class Side
 
     public void AddArmy(Army incoming)
     {
+        Debug.Log(
+    $"Adding army {incoming.GetHashCode()} size={incoming.size} to side");
         foreach (var army in armies)
         {
-            if (army.player.Equals(incoming.player))
+            if (ReferenceEquals(army, incoming))
+            {Debug.LogError("Same Army instance added twice!");
+            return;  }   // already in this side
+
+            if (army.player.Id == incoming.player.Id)
             {
                 army.size += incoming.size;
                 return;
@@ -137,7 +147,7 @@ public class Side
     {
         foreach (var army in armies)
         {
-            if (army.player.Equals(player)) continue;
+            if (army.player.Id == player.Id) continue;
             if (!army.player.Allies.Contains(player.Id)) return false;
         }
         return true;

@@ -5,9 +5,10 @@ public class Mover : MonoBehaviour
 {
     public Army army;
     public bool retreating;
+    public float retreatingTime;
+    public float retreatingTimer;
+    public bool cantCollide;
     bool previousRetreating;
-    float retreatingTimer;
-    bool cantCollide;
     public GameObject battlePrefab;
 
     void Update()
@@ -24,7 +25,7 @@ public class Mover : MonoBehaviour
 
         if (cantCollide)
         {
-            if (retreatingTimer >= 1)
+            if (retreatingTimer >= retreatingTime)
             {
                 cantCollide = false;
                 retreatingTimer = 0;
@@ -37,26 +38,25 @@ public class Mover : MonoBehaviour
     {
         if (cantCollide) return;
 
-        Battle combat = collision.gameObject.GetComponent<Battle>();
-        if (combat != null) combat.ReceiveMover(this);
+        if (collision.transform.TryGetComponent(out Battle battle)) battle.ReceiveMover(this);
 
-        Region region = collision.gameObject.GetComponent<Region>();
-        if (region != null) region.ReceiveMover(this);
+        if (collision.transform.TryGetComponent(out Region region) && (retreating || region == army.destination))
+        { region.ReceiveMover(this); }
 
-        Mover other = collision.gameObject.GetComponent<Mover>();
-        if (other == null || other.army.player.Allies.Contains(army.player.Id)) return;
+       if (!collision.transform.TryGetComponent(out Mover other)) return;
+
+        if (other.army.player.Id == army.player.Id ||
+            other.army.player.Allies.Contains(army.player.Id)) return;
 
         // Both movers get this collision callback - only the lower InstanceID proceeds,
         // otherwise you'd spin up two separate Battles from one collision.
         if (GetInstanceID() > other.GetInstanceID()) return;
         
-        GameObject newBattle = Instantiate(battlePrefab, transform.position, Quaternion.identity);
-        Battle battle = newBattle.GetComponent<Battle>();
-        battle.ReceiveMover(other);
-        battle.ReceiveMover(this);
+        GameObject battleObject = Instantiate(battlePrefab, transform.position, Quaternion.identity);
+        Battle newBattle = battleObject.GetComponent<Battle>();
 
-        bool otherConsumed = battle.ReceiveMover(other);
-        bool thisConsumed = battle.ReceiveMover(this);
+        bool otherConsumed = newBattle.ReceiveMover(other);
+        bool thisConsumed = newBattle.ReceiveMover(this);
         if (otherConsumed) Destroy(other.gameObject);
         if (thisConsumed) Destroy(gameObject);
     }

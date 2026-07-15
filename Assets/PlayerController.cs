@@ -9,61 +9,58 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (Mouse.current.leftButton.isPressed)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Mouse.current == null) return;
 
-            if (Physics.Raycast(ray, out RaycastHit hit))
+        if (!Mouse.current.leftButton.wasPressedThisFrame) return;
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+
+        if (!Physics.Raycast(ray, out RaycastHit hit)) return;
+
+        if (hit.transform.TryGetComponent(out Region region))
+        {
+            if (selectedRegion != null && region != selectedRegion)
             {
-                Region region = hit.transform.GetComponent<Region>();
-                Battle battle = hit.transform.GetComponent<Battle>();
-                Mover mover = hit.transform.GetComponent<Mover>();
-                if (region != null)
+                foreach (var neighbor in selectedRegion.neighbors)
                 {
-                    if (selectedRegion != null && region != selectedRegion)
+                    if (region == neighbor)
                     {
-                        foreach (var neighbor in selectedRegion.neighbors)
+                        selectedRegion.destination = region;
+                        selectedRegion.selected = false;
+                        foreach(var Neighbor in selectedRegion.neighbors)
                         {
-                            if (region == neighbor)
-                            {
-                                selectedRegion.destination = region;
-                                selectedRegion.selected = false;
-                                foreach(var Neighbor in selectedRegion.neighbors)
-                                {
-                                    Neighbor.highlighted = false;
-                                }
-                                selectedRegion = null;
-                            }
+                            Neighbor.highlighted = false;
                         }
+                        selectedRegion = null;
                     }
-                    else if (region.player.Equals(player) || region.player.Allies.Contains(player.Id))
-                    {
-                        region.selected = true;
-                        selectedRegion = region;
-                        foreach(var neighbor in selectedRegion.neighbors)
-                        {
-                            neighbor.highlighted = true;
-                        }
-                    }
-                }
-                else if (battle != null)
-                {
-                    foreach (var side in battle.sides)
-                    {
-                        foreach (var army in side.armies)
-                        {
-                            if (army.player.Equals(player))
-                            {
-                                battle.RetreatArmy(army);
-                            }
-                        }
-                    }
-                }
-                else if (mover != null && mover.army.player.Equals(player))
-                {
-                    mover.retreating = true;
                 }
             }
+            else if (selectedRegion == null && (region.player.Id == player.Id || region.player.Allies.Contains(player.Id)))
+            {
+                region.selected = true;
+                selectedRegion = region;
+                foreach(var neighbor in selectedRegion.neighbors)
+                {
+                    neighbor.highlighted = true;
+                }
+            }
+        }
+        else if (hit.transform.TryGetComponent(out Battle battle))
+        {
+            foreach (var side in battle.sides)
+            {
+                foreach (var army in side.armies)
+                {
+                    if (army.player.Equals(player))
+                    {
+                        battle.RetreatArmy(army);
+                    }
+                }
+            }
+        }
+        else if (hit.transform.TryGetComponent(out Mover mover) && mover.army.player.Id == player.Id)
+        {
+            mover.retreating = true;
         }
     }
 }
