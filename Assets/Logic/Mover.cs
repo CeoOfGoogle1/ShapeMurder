@@ -34,7 +34,7 @@ public class Mover : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
         if (cantCollide) return;
 

@@ -32,7 +32,7 @@ public class Region : MonoBehaviour
 
     void Update()
     {   
-        if (garrison.size >= sendSize && destination != null && destination.garrison.size < destination.limit)
+        if (garrison.size >= sendSize && destination != null)
         {
             if (Tick(ref sendTimer, sendTime)) SendArmy(garrison, sendSize, destination);
         }

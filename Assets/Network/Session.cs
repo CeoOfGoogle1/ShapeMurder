@@ -13,6 +13,16 @@ public class Session : NetworkBehaviour
     public Player[] Players => players;
     public int MaxPlayerCount => maxPlayerCount;
 
+    public void Initialize(int maxConnections)
+    {
+        if(players != null)
+        return;
+
+        maxPlayerCount = maxConnections;
+
+        players = new Player[maxPlayerCount];
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,7 +33,6 @@ public class Session : NetworkBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-        players = new Player[maxPlayerCount];
     }
 
     public override void OnDestroy()
@@ -35,10 +44,7 @@ public class Session : NetworkBehaviour
     [ClientRpc]
     private void SendPlayerDataToClientsClientRpc(Player[] players)
     {
-        if(!IsHost) return;
-
         this.players = players;
-
     }
 
     private Player GetPlayerDataById(int id)
@@ -58,7 +64,7 @@ public class Session : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += AddToPlayerList;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= RemoveFromPlayerList;
+        NetworkManager.Singleton.OnClientDisconnectCallback += RemoveFromPlayerList;
     }
 
     public override void OnNetworkDespawn()
