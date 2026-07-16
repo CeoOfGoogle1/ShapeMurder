@@ -12,7 +12,7 @@ public class Region : MonoBehaviour
     public List<Region> neighbors;
     public Player player;
     public Army garrison;
-    private Dictionary<int, Army> visitors = new();
+    public Dictionary<int, Army> visitors = new();
     public int limit;
 
     [Header("Send Settings")]
@@ -32,6 +32,7 @@ public class Region : MonoBehaviour
 
     void Update()
     {   
+        garrison.player = player;
         if (garrison.size >= sendSize && destination != null)
         {
             if (Tick(ref sendTimer, sendTime)) SendArmy(garrison, sendSize, destination);
@@ -72,15 +73,20 @@ public class Region : MonoBehaviour
         return true;
     }
 
-    public void ReceiveMover(Mover mover)
+    public bool ReceiveMover(Mover mover)
     {
         if (mover.army.player.Id == player.Id)
         {
-            if (garrison.size >= limit) mover.retreating = true;
+            if (garrison.size >= limit)
+            {
+                mover.retreating = true;
+                return false;
+            }
             else
             {
                 garrison.size += mover.army.size;
                 Destroy(mover.gameObject);
+                return true;
             }
         }
         else if (player.Allies.Contains(mover.army.player.Id))
@@ -89,13 +95,19 @@ public class Region : MonoBehaviour
             {
                 visitors.Add(mover.army.player.Id, mover.army);
                 Destroy(mover.gameObject);
+                return true;
             }
             else if (visitor.size < limit)
             {
                 visitor.size += mover.army.size;
                 Destroy(mover.gameObject);
+                return true;
             }
-            else mover.retreating = true;
+            else
+            {
+                mover.retreating = true;
+                return false;
+            }
         }
         else if (battle == null)
         {
@@ -107,10 +119,21 @@ public class Region : MonoBehaviour
             battle.fightTime = moverPrefab.GetComponent<Mover>().battlePrefab.GetComponent<Battle>().fightTime;
             foreach (var kvp in new List<KeyValuePair<int, Army>>(visitors))
             {
-                if (battle.ReceiveArmy(kvp.Value)) visitors.Remove(kvp.Key);
+                if (battle.ReceiveArmy(kvp.Value)) 
+                {
+                    visitors.Remove(kvp.Key);
+                    return true;
+                }
+                else
+                {
+                    mover.retreating = true;
+                    return false;
+                }
+
             }
         }
         else if (battle.ReceiveMover(mover)) Destroy(mover.gameObject);
+        return true;
     }
 
     public void SwitchTo(Player player, Army army)

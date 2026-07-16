@@ -41,7 +41,12 @@ public class Mover : MonoBehaviour
         if (collision.transform.TryGetComponent(out Battle battle)) battle.ReceiveMover(this);
 
         if (collision.transform.TryGetComponent(out Region region) && (retreating || region == army.destination))
-        { region.ReceiveMover(this); }
+        { 
+            if (!region.ReceiveMover(this) && region == army.origin)
+            {
+                Destroy(gameObject);
+            }
+        }
 
        if (!collision.transform.TryGetComponent(out Mover other)) return;
 
