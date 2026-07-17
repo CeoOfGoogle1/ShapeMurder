@@ -147,14 +147,40 @@ MonoBehaviour:
     id: 1
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   garrison:
     player:
       id: 1
       networkId: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-      allies: 
+      allies:
+        data:
+          offset0000:
+            byte0000: 0
+            byte0008: 0
+          offset0016:
+            byte0000: 0
+            byte0008: 0
+          offset0032:
+            byte0000: 0
+            byte0008: 0
+          offset0048:
+            byte0000: 0
+            byte0008: 0
       playerStatus: 0
     size: 10
     speed: 1
@@ -295,14 +321,40 @@ MonoBehaviour:
     id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   garrison:
     player:
       id: 0
       networkId: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-      allies: 
+      allies:
+        data:
+          offset0000:
+            byte0000: 0
+            byte0008: 0
+          offset0016:
+            byte0000: 0
+            byte0008: 0
+          offset0032:
+            byte0000: 0
+            byte0008: 0
+          offset0048:
+            byte0000: 0
+            byte0008: 0
       playerStatus: 0
     size: 0
     speed: 1
@@ -379,7 +431,20 @@ MonoBehaviour:
     id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   selectedRegion: {fileID: 0}
 --- !u!114 &229598729
@@ -493,6 +558,80 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1527620325}
   m_SourcePrefab: {fileID: 100100000, guid: 046c5859ff151e3459f7c5484069cc54, type: 3}
+--- !u!1 &355992741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 355992743}
+  - component: {fileID: 355992742}
+  - component: {fileID: 355992744}
+  m_Layer: 0
+  m_Name: Session Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &355992742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355992741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3994148946
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 0
+  <InScenePlaced>k__BackingField: 0
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!4 &355992743
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355992741}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &355992744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355992741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c515b75acabd074594bd36a9e8078f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Session
+  ShowTopMostFoldoutHeaderGroup: 1
+  maxPlayerCount: 8
+  players: []
 --- !u!1 &488926233
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,120 +711,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &512845080
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 512845082}
-  - component: {fileID: 512845083}
-  - component: {fileID: 512845081}
-  m_Layer: 0
-  m_Name: Session
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &512845081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 512845080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c515b75acabd074594bd36a9e8078f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SessionManager
-  ShowTopMostFoldoutHeaderGroup: 1
-  maxPlayerCount: 8
-  players:
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
-  - id: 0
-    networkId: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
-    playerStatus: 0
---- !u!4 &512845082
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 512845080}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &512845083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 512845080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3236878886
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 0
-  <InScenePlaced>k__BackingField: 0
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!1001 &759117928
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1267,6 +1292,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &896579653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 896579655}
+  - component: {fileID: 896579654}
+  m_Layer: 0
+  m_Name: Session Debugger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &896579654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896579653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68a8de102341ca24fa6be8564e65f86b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SessionDebugger
+--- !u!4 &896579655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896579653}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1261808285
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1375,11 +1444,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47092859da95a4544afbb02cb9ffdbad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConnectionManager
+  ShowTopMostFoldoutHeaderGroup: 1
   hostButton: {fileID: 881712643}
   clientButton: {fileID: 881712642}
   disconnectButton: {fileID: 1683251455}
   lobbyCodeInput: {fileID: 881712641}
   lobbyIdText: {fileID: 881712640}
+  maxConnections: 8
 --- !u!4 &1445037617
 Transform:
   m_ObjectHideFlags: 0
@@ -1563,14 +1634,40 @@ MonoBehaviour:
     id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   garrison:
     player:
       id: 0
       networkId: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-      allies: 
+      allies:
+        data:
+          offset0000:
+            byte0000: 0
+            byte0008: 0
+          offset0016:
+            byte0000: 0
+            byte0008: 0
+          offset0032:
+            byte0000: 0
+            byte0008: 0
+          offset0048:
+            byte0000: 0
+            byte0008: 0
       playerStatus: 0
     size: 0
     speed: 1
@@ -1614,14 +1711,40 @@ MonoBehaviour:
     id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   garrison:
     player:
       id: 0
       networkId: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-      allies: 
+      allies:
+        data:
+          offset0000:
+            byte0000: 0
+            byte0008: 0
+          offset0016:
+            byte0000: 0
+            byte0008: 0
+          offset0032:
+            byte0000: 0
+            byte0008: 0
+          offset0048:
+            byte0000: 0
+            byte0008: 0
       playerStatus: 0
     size: 0
     speed: 1
@@ -2010,14 +2133,40 @@ MonoBehaviour:
     id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   garrison:
     player:
       id: 0
       networkId: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-      allies: 
+      allies:
+        data:
+          offset0000:
+            byte0000: 0
+            byte0008: 0
+          offset0016:
+            byte0000: 0
+            byte0008: 0
+          offset0032:
+            byte0000: 0
+            byte0008: 0
+          offset0048:
+            byte0000: 0
+            byte0008: 0
       playerStatus: 0
     size: 0
     speed: 1
@@ -2088,14 +2237,40 @@ MonoBehaviour:
     id: 0
     networkId: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    allies: 
+    allies:
+      data:
+        offset0000:
+          byte0000: 0
+          byte0008: 0
+        offset0016:
+          byte0000: 0
+          byte0008: 0
+        offset0032:
+          byte0000: 0
+          byte0008: 0
+        offset0048:
+          byte0000: 0
+          byte0008: 0
     playerStatus: 0
   garrison:
     player:
       id: 0
       networkId: 0
       color: {r: 0, g: 0, b: 0, a: 0}
-      allies: 
+      allies:
+        data:
+          offset0000:
+            byte0000: 0
+            byte0008: 0
+          offset0016:
+            byte0000: 0
+            byte0008: 0
+          offset0032:
+            byte0000: 0
+            byte0008: 0
+          offset0048:
+            byte0000: 0
+            byte0008: 0
       playerStatus: 0
     size: 0
     speed: 1
@@ -2224,7 +2399,8 @@ SceneRoots:
   - {fileID: 1704740641}
   - {fileID: 895144820}
   - {fileID: 1445037617}
-  - {fileID: 512845082}
+  - {fileID: 355992743}
+  - {fileID: 896579655}
   - {fileID: 1503646428}
   - {fileID: 229598730}
   - {fileID: 174816370}
