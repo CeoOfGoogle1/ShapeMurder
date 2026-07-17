@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using com.cyborgAssets.inspectorButtonPro;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -10,7 +11,7 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConnectionManager : MonoBehaviour
+public class ConnectionManager : NetworkBehaviour
 {
     [Header("UI")]
     [SerializeField] private Button hostButton;
@@ -64,14 +65,10 @@ public class ConnectionManager : MonoBehaviour
             // Стартуем хост
             NetworkManager.Singleton.StartHost();
 
-            lobbyIdText.text = $"Lobby Code: {joinCode}";
+            lobbyIdText.text = $"Lobby: {joinCode}";
             Debug.Log($"Relay Host started. Join Code: {joinCode}");
 
-
-            // Creating Session
-            GameObject session = new GameObject("Session");
-            session.AddComponent<NetworkObject>().SynchronizeTransform = false;
-            session.AddComponent<Session>();
+            Session.Instance.Initialize(maxConnections);
         }
         catch (RelayServiceException e)
         {
@@ -112,6 +109,7 @@ public class ConnectionManager : MonoBehaviour
         }
     }
 
+    [ProButton]
     private void Disconnect()
     {
         if (NetworkManager.Singleton == null)
