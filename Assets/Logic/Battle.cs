@@ -20,8 +20,8 @@ public class Battle : MonoBehaviour
         {
             // Everyone died
             Region region = GetComponent<Region>();
-            if (region != null) region.battle = null;
-            Destroy(gameObject);
+            if (region != null) Destroy(this);
+            else Destroy(gameObject);
         }
 
         if (sides.Count == 1) ended = true;
