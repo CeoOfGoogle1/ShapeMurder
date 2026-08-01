@@ -50,8 +50,8 @@ public class Mover : MonoBehaviour
 
        if (!collision.transform.TryGetComponent(out Mover other)) return;
 
-        if (other.army.player.Id == army.player.Id ||
-            Utilities.CheckIfHasAlly(other.army.player, army.player.Id)) return;
+        if (other.army.player.ClientId == army.player.ClientId ||
+            Utilities.CheckIfHasAlly(other.army.player, (int)army.player.ClientId)) return;
 
         // Both movers get this collision callback - only the lower InstanceID proceeds,
         // otherwise you'd spin up two separate Battles from one collision.
@@ -81,13 +81,13 @@ public class Mover : MonoBehaviour
 public class Army
 {
     [Header("Army Settings")]
-    public Player player;
+    public PlayerData player;
     public int size;
     public float speed;
     public Region origin;
     public Region destination;
 
-    public Army(Player player, int size, float speed, Region origin, Region destination)
+    public Army(PlayerData player, int size, float speed, Region origin, Region destination)
     {
         this.player = player;
         this.size = size;

@@ -10,7 +10,7 @@ public class Region : MonoBehaviour
     public int id;
     public RegionType type;
     public List<Region> neighbors;
-    public Player player;
+    public PlayerData player;
     public Army garrison;
     public Dictionary<int, Army> visitors = new();
     public int limit;
@@ -65,17 +65,17 @@ public class Region : MonoBehaviour
         return true;
     }
 
-    public bool SendVisitor(Player visitorPlayer, int amount, Region destination)
+    public bool SendVisitor(PlayerData visitorPlayer, int amount, Region destination)
     {
-        if (!visitors.TryGetValue(visitorPlayer.Id, out Army visitor)) return false;
+        if (!visitors.TryGetValue((int)visitorPlayer.ClientId, out Army visitor)) return false;
         if (!SendArmy(visitor, amount, destination)) return false;
-        if (visitor.size <= 0) visitors.Remove(visitorPlayer.Id);
+        if (visitor.size <= 0) visitors.Remove((int)visitorPlayer.ClientId);
         return true;
     }
 
     public bool ReceiveMover(Mover mover)
     {
-        if (mover.army.player.Id == player.Id)
+        if (mover.army.player.ClientId == player.ClientId)
         {
             if (garrison.size >= limit)
             {
@@ -89,11 +89,11 @@ public class Region : MonoBehaviour
                 return true;
             }
         }
-        else if (Utilities.CheckIfHasAlly(player, mover.army.player.Id))
+        else if (Utilities.CheckIfHasAlly(player, (int)mover.army.player.ClientId))
         {
-            if (!visitors.TryGetValue(mover.army.player.Id, out Army visitor))
+            if (!visitors.TryGetValue((int)mover.army.player.ClientId, out Army visitor))
             {
-                visitors.Add(mover.army.player.Id, mover.army);
+                visitors.Add((int)mover.army.player.ClientId, mover.army);
                 Destroy(mover.gameObject);
                 return true;
             }
@@ -136,7 +136,7 @@ public class Region : MonoBehaviour
         return true;
     }
 
-    public void SwitchTo(Player player, Army army)
+    public void SwitchTo(PlayerData player, Army army)
     {
         this.player = player;
         garrison = army;

@@ -7,14 +7,14 @@ public class SessionDebugger : MonoBehaviour
     private void DebugPlayers()
     {
 
-        if (Session.Instance == null || Session.Instance.Players == null)
+        if (PlayerDataManager.Instance == null || PlayerDataManager.Instance.Players == null)
         {
             return;
         }
 
-        foreach (var player in Session.Instance.Players)
+        foreach (var player in PlayerDataManager.Instance.Players)
         {
-            Debug.Log($"Player {player.Id}: NetworkId {player.Id}, {player.NetworkId}");
+            Debug.Log($"Player {player.ClientId}, Status {player.PlayerStatus}");
         }
     }
 }

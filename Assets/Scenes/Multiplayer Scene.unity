@@ -813,7 +813,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47092859da95a4544afbb02cb9ffdbad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConnectionManager
-  sessionPrefab: {fileID: 4125596272215286652, guid: 0c30112dfa2af6f48a8d298273adca15, type: 3}
+  playerDataManagerPrefab: {fileID: 4338801256014159019, guid: 675f6cfa463616f428d9a415fe8d24f7, type: 3}
   hostButton: {fileID: 881712643}
   clientButton: {fileID: 881712642}
   disconnectButton: {fileID: 1683251455}

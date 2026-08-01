@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public Player player;
+    public PlayerData player;
     public Region selectedRegion;
 
     void Update()
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            else if (selectedRegion == null && (region.player.Id == player.Id || Utilities.CheckIfHasAlly(region.player, player.Id)))
+            else if (selectedRegion == null && (region.player.ClientId == player.ClientId || Utilities.CheckIfHasAlly(region.player, (int)player.ClientId)))
             {
                 region.selected = true;
                 selectedRegion = region;
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else if (hit.transform.TryGetComponent(out Mover mover) && mover.army.player.Id == player.Id)
+        else if (hit.transform.TryGetComponent(out Mover mover) && mover.army.player.ClientId == player.ClientId)
         {
             mover.retreating = true;
         }

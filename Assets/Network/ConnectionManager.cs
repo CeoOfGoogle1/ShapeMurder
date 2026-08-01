@@ -14,7 +14,7 @@ using UnityEngine.UI;
 public class ConnectionManager : MonoBehaviour
 {
     [Header("Prefabs")]
-    [SerializeField] private GameObject sessionPrefab;
+    [SerializeField] private GameObject playerDataManagerPrefab;
     [Header("UI")]
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
@@ -33,6 +33,11 @@ public class ConnectionManager : MonoBehaviour
         await InitUnityServices();
     }
 
+    void OnEnable()
+    {
+        NetworkManager.Singleton.OnServerStarted += HandleServerStarted;
+    }
+
     private async Task InitUnityServices()
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
@@ -42,6 +47,16 @@ public class ConnectionManager : MonoBehaviour
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
         Debug.Log("Unity Services initialized");
+    }
+
+    private void HandleServerStarted()
+    {
+        if(NetworkManager.Singleton.IsHost)
+        {
+            GameObject playerDataManager = Instantiate(playerDataManagerPrefab);
+
+            playerDataManager.GetComponent<NetworkObject>().Spawn();
+        }
     }
 
     private async void StartHostRelay()
@@ -66,15 +81,6 @@ public class ConnectionManager : MonoBehaviour
 
             // Запускаем сервер
             NetworkManager.Singleton.StartHost();
-
-            // Создаём Session после запуска сервера
-            GameObject sessionObj = Instantiate(sessionPrefab);
-
-            NetworkObject networkObject = sessionObj.GetComponent<NetworkObject>();
-
-            networkObject.Spawn(true);
-
-            Session.Instance.Initialize(maxConnections);
 
             lobbyIdText.text = $"Lobby: {joinCode}";
             Debug.Log($"Relay Host started. Join Code: {joinCode}");
@@ -127,7 +133,7 @@ public class ConnectionManager : MonoBehaviour
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
         {
             NetworkManager.Singleton.Shutdown();
-            Destroy(Session.Instance.gameObject);
+            Destroy(PlayerDataManager.Instance.gameObject);
             Debug.Log("Disconnected from server");
         }
     }
