@@ -134,7 +134,7 @@ public class Side
             {Debug.LogError("Same Army instance added twice!");
             return;  }   // already in this side
 
-            if (army.player.Id == incoming.player.Id)
+            if (army.player.ClientId == incoming.player.ClientId)
             {
                 army.size += incoming.size;
                 return;
@@ -143,12 +143,12 @@ public class Side
         armies.Add(incoming);
     }
 
-    public bool IsFriendlyWith(Player player)
+    public bool IsFriendlyWith(PlayerData player)
     {
         foreach (var army in armies)
         {
-            if (army.player.Id == player.Id) continue;
-            if (!Utilities.CheckIfHasAlly(army.player, player.Id)) return false;
+            if (army.player.ClientId == player.ClientId) continue;
+            if (!Utilities.CheckIfHasAlly(army.player, (int)player.ClientId)) return false;
         }
         return true;
     }
