@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
         if (Mouse.current == null) return;
 
         if (!Mouse.current.leftButton.wasPressedThisFrame) return;
+
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
@@ -35,7 +36,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            else if (selectedRegion == null && (region.player.Id == player.Id || region.player.Allies.Contains(player.Id)))
+            else if (selectedRegion == null && (region.player.Id == player.Id || Utilities.CheckIfHasAlly(region.player, player.Id)))
             {
                 region.selected = true;
                 selectedRegion = region;

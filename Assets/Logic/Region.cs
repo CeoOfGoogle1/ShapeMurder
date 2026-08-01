@@ -89,7 +89,7 @@ public class Region : MonoBehaviour
                 return true;
             }
         }
-        else if (player.Allies.Contains(mover.army.player.Id))
+        else if (Utilities.CheckIfHasAlly(player, mover.army.player.Id))
         {
             if (!visitors.TryGetValue(mover.army.player.Id, out Army visitor))
             {
