@@ -11,8 +11,10 @@ using Unity.Services.Relay.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConnectionManager : NetworkBehaviour
+public class ConnectionManager : MonoBehaviour
 {
+    [Header("Prefabs")]
+    [SerializeField] private GameObject sessionPrefab;
     [Header("UI")]
     [SerializeField] private Button hostButton;
     [SerializeField] private Button clientButton;
@@ -62,13 +64,20 @@ public class ConnectionManager : NetworkBehaviour
                 allocation.ConnectionData
             );
 
-            // Стартуем хост
+            // Запускаем сервер
             NetworkManager.Singleton.StartHost();
+
+            // Создаём Session после запуска сервера
+            GameObject sessionObj = Instantiate(sessionPrefab);
+
+            NetworkObject networkObject = sessionObj.GetComponent<NetworkObject>();
+
+            networkObject.Spawn(true);
+
+            Session.Instance.Initialize(maxConnections);
 
             lobbyIdText.text = $"Lobby: {joinCode}";
             Debug.Log($"Relay Host started. Join Code: {joinCode}");
-
-            Session.Instance.Initialize(maxConnections);
         }
         catch (RelayServiceException e)
         {

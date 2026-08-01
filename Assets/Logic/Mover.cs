@@ -51,7 +51,7 @@ public class Mover : MonoBehaviour
        if (!collision.transform.TryGetComponent(out Mover other)) return;
 
         if (other.army.player.Id == army.player.Id ||
-            other.army.player.Allies.Contains(army.player.Id)) return;
+            Utilities.CheckIfHasAlly(other.army.player, army.player.Id)) return;
 
         // Both movers get this collision callback - only the lower InstanceID proceeds,
         // otherwise you'd spin up two separate Battles from one collision.
@@ -74,7 +74,7 @@ public class Mover : MonoBehaviour
         mover.army.origin = origin;
         mover.army.destination = destination;
         return mover;
-    }
+    }   
 }
 
 [System.Serializable]

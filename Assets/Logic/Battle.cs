@@ -148,7 +148,7 @@ public class Side
         foreach (var army in armies)
         {
             if (army.player.Id == player.Id) continue;
-            if (!army.player.Allies.Contains(player.Id)) return false;
+            if (!Utilities.CheckIfHasAlly(army.player, player.Id)) return false;
         }
         return true;
     }
