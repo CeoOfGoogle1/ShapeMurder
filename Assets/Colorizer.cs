@@ -19,9 +19,24 @@ public class Colorizer : MonoBehaviour
 
     void Update()
     {
+        if (PlayerDataManager.Instance == null) {return;}
+
         if (mover)
         {
-            material.color = mover.army.player.Color;
+            if (mover.army == null) { Debug.LogError("mover.army is null!", this); return; }
+            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)mover.army.ownerId).Color;
+        }
+        else if (region)
+        {
+            if (region.garrison == null) { Debug.LogError("region.garrison is null!", this); return; }
+            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)region.garrison.ownerId).Color;
+        }
+
+        // actual logic
+
+        if (mover)
+        {
+            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)mover.army.ownerId).Color;
         }
         else if (battle)
         {
@@ -29,7 +44,7 @@ public class Colorizer : MonoBehaviour
         }
         else if (region)
         {
-            material.color = region.garrison.player.Color;
+            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)region.garrison.ownerId).Color;
         }
     }
 }

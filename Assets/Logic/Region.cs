@@ -5,12 +5,12 @@ using UnityEngine;
 public class Region : MonoBehaviour
 {
     [Header("Region Settings")]
+    public int ownerId;
     public bool selected;
     public bool highlighted;
     public int id;
     public RegionType type;
     public List<Region> neighbors;
-    public PlayerData player;
     public Army garrison;
     public Dictionary<int, Army> visitors = new();
     public int limit;
@@ -32,7 +32,7 @@ public class Region : MonoBehaviour
 
     void Update()
     {   
-        garrison.player = player;
+        garrison.ownerId = ownerId;
         if (garrison.size >= sendSize && destination != null)
         {
             if (Tick(ref sendTimer, sendTime)) SendArmy(garrison, sendSize, destination);
@@ -59,7 +59,7 @@ public class Region : MonoBehaviour
     bool SendArmy(Army army, int amount, Region destination)
     {
         if (amount > army.size) return false;
-        Army sent = new Army(army.player, amount, army.speed, this, destination);
+        Army sent = new Army(army.ownerId, amount, army.speed, this, destination);
         army.size -= amount;
         Mover.Spawn(moverPrefab, sent, transform.position, this, destination);
         return true;
@@ -75,7 +75,7 @@ public class Region : MonoBehaviour
 
     public bool ReceiveMover(Mover mover)
     {
-        if (mover.army.player.ClientId == player.ClientId)
+        if (mover.army.ownerId == ownerId)
         {
             if (garrison.size >= limit)
             {
@@ -89,11 +89,11 @@ public class Region : MonoBehaviour
                 return true;
             }
         }
-        else if (Utilities.CheckIfHasAlly(player, (int)mover.army.player.ClientId))
+        else if (Utilities.CheckIfHasAlly(ownerId, (int)mover.army.ownerId))
         {
-            if (!visitors.TryGetValue((int)mover.army.player.ClientId, out Army visitor))
+            if (!visitors.TryGetValue((int)mover.army.ownerId, out Army visitor))
             {
-                visitors.Add((int)mover.army.player.ClientId, mover.army);
+                visitors.Add((int)mover.army.ownerId, mover.army);
                 Destroy(mover.gameObject);
                 return true;
             }
@@ -136,9 +136,9 @@ public class Region : MonoBehaviour
         return true;
     }
 
-    public void SwitchTo(PlayerData player, Army army)
+    public void SwitchTo(int newOwnerId, Army army)
     {
-        this.player = player;
+        this.ownerId = newOwnerId;
         garrison = army;
         battle = null;
         destination = null;

@@ -57,7 +57,10 @@ namespace ColorPicker
 
         void OnDisable()
         {
-            ColorSelectionChanged -= LocalDataManager.Instance.ChangeClientColor; 
+            if(LocalDataManager.Instance != null)
+            {
+                ColorSelectionChanged -= LocalDataManager.Instance.ChangeClientColor; 
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData)

@@ -12,4 +12,15 @@ public static class Utilities
 
         return false;
     }
+
+    public static bool CheckIfHasAlly(int playerId, int allyId)
+    {
+        for(int i = 0; i < PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)playerId).Allies.Length; i++)
+        {
+            if(PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)playerId).Allies[i] == allyId)
+                return true;
+        }
+
+        return false;
+    }
 }
