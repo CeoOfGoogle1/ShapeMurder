@@ -14,7 +14,7 @@ public class SessionDebugger : MonoBehaviour
 
         foreach (var player in PlayerDataManager.Instance.Players)
         {
-            Debug.Log($"Player {player.ClientId}, Status {player.PlayerStatus}");
+            Debug.Log($"Player: {player.PlayerName}, Id:{player.ClientId}, Color: {player.Color} Status: {player.Status}");
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using com.cyborgAssets.inspectorButtonPro;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Networking.Transport.Error;
 using UnityEngine;
 
 public class PlayerDataManager : NetworkBehaviour
@@ -48,11 +49,16 @@ public class PlayerDataManager : NetworkBehaviour
     {
         Debug.Log("Handling Player Connection");
 
-        Players.Add(new PlayerData
+        ClientRpcParams clientRpcParams = new ClientRpcParams
         {
-            ClientId = clientId,
-            PlayerName = $"Player{clientId}",
-        });
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { clientId }
+            }
+        };
+
+        RequestClientDataClientRpc(clientRpcParams);
+        Debug.Log($"Requesting data of {clientId}");
     }
 
     private void HandleDisconnected(ulong clientId)
@@ -71,6 +77,27 @@ public class PlayerDataManager : NetworkBehaviour
     {
         
     }
+
+    [ClientRpc]
+    public void RequestClientDataClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        SubmitClientDataServerRpc(LocalDataManager.Instance.ClientName, LocalDataManager.Instance.ClientColor);
+    }
+
+    [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
+    public void SubmitClientDataServerRpc(string name, Color color, RpcParams rpcParams = default)
+    {
+        ulong senderId = rpcParams.Receive.SenderClientId;
+        Players.Add(new PlayerData
+        {
+            ClientId = senderId,
+            PlayerName = name,
+            Color = color,
+            Status = PlayerStatus.Connected
+        });
+
+        Debug.Log($"Data of {senderId} received. Name: {name}, Color: {color}");
+    }
     
 }
 
@@ -80,7 +107,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
     public FixedString32Bytes PlayerName;
     public Color Color;
     public FixedList64Bytes<int> Allies;
-    public PlayerStatus PlayerStatus;
+    public PlayerStatus Status;
     
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -88,7 +115,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
         serializer.SerializeValue(ref ClientId);
         serializer.SerializeValue(ref PlayerName);
         serializer.SerializeValue(ref Color);
-        serializer.SerializeValue(ref PlayerStatus);
+        serializer.SerializeValue(ref Status);
 
         // --- кастомная сериализация Allies ---
         if (serializer.IsWriter)
@@ -123,7 +150,7 @@ public struct PlayerData : INetworkSerializable, IEquatable<PlayerData>
         if (ClientId != other.ClientId) return false;
         if (!PlayerName.Equals(other.PlayerName)) return false;
         if (!Color.Equals(other.Color)) return false;
-        if (PlayerStatus != other.PlayerStatus) return false;
+        if (Status != other.Status) return false;
 
         if (Allies.Length != other.Allies.Length) return false;
         for (int i = 0; i < Allies.Length; i++)
