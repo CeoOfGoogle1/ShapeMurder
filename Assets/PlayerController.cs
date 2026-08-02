@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-            else if (selectedRegion == null && (region.player.ClientId == player.ClientId || Utilities.CheckIfHasAlly(region.player, (int)player.ClientId)))
+            else if (selectedRegion == null && (region.ownerId == (int)player.ClientId || Utilities.CheckIfHasAlly(region.ownerId, (int)player.ClientId)))
             {
                 region.selected = true;
                 selectedRegion = region;
@@ -52,14 +52,14 @@ public class PlayerController : MonoBehaviour
             {
                 foreach (var army in side.armies)
                 {
-                    if (army.player.Equals(player))
+                    if (PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)army.ownerId).Equals(player))
                     {
                         battle.RetreatArmy(army);
                     }
                 }
             }
         }
-        else if (hit.transform.TryGetComponent(out Mover mover) && mover.army.player.ClientId == player.ClientId)
+        else if (hit.transform.TryGetComponent(out Mover mover) && mover.army.ownerId == (int)player.ClientId)
         {
             mover.retreating = true;
         }

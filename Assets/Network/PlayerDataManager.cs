@@ -98,6 +98,17 @@ public class PlayerDataManager : NetworkBehaviour
 
         Debug.Log($"Data of {senderId} received. Name: {name}, Color: {color}");
     }
+
+    public PlayerData FindPlayerDataByClientId(ulong clientId)
+    {
+        for (int i = 0; i < Players.Count; i++)
+        {
+            if (Players[i].ClientId == clientId)
+                return Players[i];
+        }
+
+        return new PlayerData{ClientId = 999, PlayerName = "nonexistent player", Color = Color.gray, Status = PlayerStatus.Empty};
+    }
     
 }
 

@@ -45,7 +45,7 @@ public class Battle : MonoBehaviour
                 if (army == leader) continue;
                 Mover.Spawn(moverPrefab, army, transform.position, army.origin, army.destination);
             }
-            region.SwitchTo(leader.player, new Army(leader.player, leader.size, leader.speed, null, null));
+            region.SwitchTo(leader.ownerId, new Army(leader.ownerId, leader.size, leader.speed, null, null));
             Destroy(this);
         }
         else
@@ -84,7 +84,7 @@ public class Battle : MonoBehaviour
     public bool ReceiveArmy(Army army)
     {
         List<Side> validSides = new();
-        foreach (var side in sides) if (side.IsFriendlyWith(army.player)) validSides.Add(side);
+        foreach (var side in sides) if (side.IsFriendlyWith(army.ownerId)) validSides.Add(side);
 
         if (validSides.Count == 1)
         {
@@ -134,7 +134,7 @@ public class Side
             {Debug.LogError("Same Army instance added twice!");
             return;  }   // already in this side
 
-            if (army.player.ClientId == incoming.player.ClientId)
+            if (army.ownerId == incoming.ownerId)
             {
                 army.size += incoming.size;
                 return;
@@ -143,12 +143,12 @@ public class Side
         armies.Add(incoming);
     }
 
-    public bool IsFriendlyWith(PlayerData player)
+    public bool IsFriendlyWith(int playerId)
     {
         foreach (var army in armies)
         {
-            if (army.player.ClientId == player.ClientId) continue;
-            if (!Utilities.CheckIfHasAlly(army.player, (int)player.ClientId)) return false;
+            if (army.ownerId == playerId) continue;
+            if (!Utilities.CheckIfHasAlly(army.ownerId, (int)playerId)) return false;
         }
         return true;
     }

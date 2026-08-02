@@ -18,6 +18,9 @@ public class PlayerNameInput : MonoBehaviour
 
     private void OnDisable()
     {
-        nameInputField.onValueChanged.RemoveListener(LocalDataManager.Instance.ChangeClientName);
+        if(LocalDataManager.Instance != null)
+        {
+            nameInputField.onValueChanged.RemoveListener(LocalDataManager.Instance.ChangeClientName);
+        }
     }
 }

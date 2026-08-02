@@ -1,5 +1,6 @@
 using System.Text;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public class Billboard : MonoBehaviour
@@ -84,7 +85,7 @@ public class Billboard : MonoBehaviour
         foreach (var visitor in region.visitors)
         {
             sb.Append("+");
-            Color c = visitor.Value.player.Color;
+            Color c = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)visitor.Value.ownerId).Color;
             sb.Append($"<color=#{ColorUtility.ToHtmlStringRGB(c)}>");
             sb.Append(visitor.Value.size);
             sb.Append("</color>");
@@ -94,8 +95,18 @@ public class Billboard : MonoBehaviour
 
     private static void AppendArmy(StringBuilder sb, Army army)
     {
+        Color color;
+        if (PlayerDataManager.Instance == null)
+        {
+            color = Color.grey;
+        }
+        else
+        {
+            color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)army.ownerId).Color;
+        }
+
         sb.Append("<color=#");
-        sb.Append(ColorUtility.ToHtmlStringRGB(army.player.Color));
+        sb.Append(ColorUtility.ToHtmlStringRGB(color));
         sb.Append(">");
         sb.Append(army.size);
         sb.Append("</color>");
