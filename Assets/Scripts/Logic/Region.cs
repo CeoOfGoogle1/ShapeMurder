@@ -1,9 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Region : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private Renderer regionRenderer;
+    [SerializeField] private Material outlineMaterial;
     [Header("Region Settings")]
     public int ownerId;
     public bool selected;
@@ -32,6 +36,9 @@ public class Region : MonoBehaviour
 
     void Update()
     {   
+        if (NetworkManager.Singleton == null) return;
+        if (!NetworkManager.Singleton.IsHost) return;
+
         garrison.ownerId = ownerId;
         if (garrison.size >= sendSize && destination != null)
         {
@@ -42,6 +49,10 @@ public class Region : MonoBehaviour
         if (selected)
         {
             
+        }
+        else
+        {
+
         }
 
         if (highlighted)
