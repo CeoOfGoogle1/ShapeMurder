@@ -52,7 +52,7 @@ namespace ColorPicker
 
         void OnEnable()
         {
-            ColorSelectionChanged += LocalDataManager.Instance.ChangeClientColor; 
+            ColorSelectionChanged += LocalDataManager.Instance.ChangeClientColor;  
         }
 
         void OnDisable()
@@ -73,7 +73,7 @@ namespace ColorPicker
 
             var uv = _paletteImage.preserveAspect
                 ? GetUVWithPreserveAspect(localPoint)
-                : GetUVWithoutPreserveAspect(localPoint);
+                : GetUVWithoutPreserveAspect(localPoint);;
 
             if (uv == null)
             {
