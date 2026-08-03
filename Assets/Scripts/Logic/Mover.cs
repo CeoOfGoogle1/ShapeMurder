@@ -73,6 +73,7 @@ public class Mover : MonoBehaviour
         mover.army = army;
         mover.army.origin = origin;
         mover.army.destination = destination;
+        mover.army.speed = 1f;
         return mover;
     }   
 }

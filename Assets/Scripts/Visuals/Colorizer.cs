@@ -15,24 +15,27 @@ public class Colorizer : MonoBehaviour
         mover = GetComponentInParent<Mover>();
         battle = GetComponentInParent<Battle>();
         region = GetComponentInParent<Region>();
+
+        
+        if (PlayerDataManager.Instance == null) {return;}
+
+        if (mover)
+        {
+            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)mover.army.ownerId).Color;
+        }
+        else if (battle)
+        {
+            
+        }
+        else if (region)
+        {
+            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)region.garrison.ownerId).Color;
+        }
     }
 
     void Update()
     {
         if (PlayerDataManager.Instance == null) {return;}
-
-        if (mover)
-        {
-            if (mover.army == null) { Debug.LogError("mover.army is null!", this); return; }
-            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)mover.army.ownerId).Color;
-        }
-        else if (region)
-        {
-            if (region.garrison == null) { Debug.LogError("region.garrison is null!", this); return; }
-            material.color = PlayerDataManager.Instance.FindPlayerDataByClientId((ulong)region.garrison.ownerId).Color;
-        }
-
-        // actual logic
 
         if (mover)
         {
