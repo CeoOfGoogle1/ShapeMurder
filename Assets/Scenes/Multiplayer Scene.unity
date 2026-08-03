@@ -590,7 +590,7 @@ MonoBehaviour:
     PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 302208c669c88f544b5fc50a2601b060, type: 2}
+      - {fileID: 11400000, guid: 52ce8a8d7291ba04d8e644b61c004873, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -1871,7 +1871,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be072a9af3f2a1419f18c9695e315b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  nameInputField: {fileID: 0}
 --- !u!114 &2044559424 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2519129227073452919, guid: 690105408c6091c49b981e05edf7939a, type: 3}
