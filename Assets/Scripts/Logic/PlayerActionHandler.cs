@@ -7,6 +7,12 @@ using UnityEngine.InputSystem;
 public class PlayerActionHandler : NetworkBehaviour
 {
     public Region selectedRegion;
+    private ObjectHighlighter objectHighlighter;
+
+    void Start()
+    {
+        if (objectHighlighter == null) objectHighlighter = FindAnyObjectByType<ObjectHighlighter>(FindObjectsInactive.Include);
+    }
 
     void Update()
     {
@@ -34,11 +40,13 @@ public class PlayerActionHandler : NetworkBehaviour
                     SetDestination(selectedRegion, region);
                 }
 
-                selectedRegion.selected = false;
+                /*selectedRegion.selected = false;
                 foreach(var Neighbor in selectedRegion.neighbors)
                 {
                     Neighbor.highlighted = false;
-                }
+                }*/
+
+                objectHighlighter.gameObject.SetActive(false);
                 selectedRegion = null;
             }
             else if (selectedRegion == null && (region.ownerId == (int)NetworkManager.Singleton.LocalClientId || Utilities.CheckIfHasAlly(region.ownerId, (int)NetworkManager.Singleton.LocalClientId)))
@@ -94,12 +102,31 @@ public class PlayerActionHandler : NetworkBehaviour
 
     private void SelectRegion(Region region)
     {
-        region.selected = true;
+        Debug.Log($"region == null: {region == null}");
+        Debug.Log($"objectHighlighter == null: {objectHighlighter == null}");
+
+        if (region != null)
+        {
+            Debug.Log($"region.mesh == null: {region.mesh == null}");
+        }
+
+        if (objectHighlighter != null)
+        {
+            Debug.Log($"objectHighlighter.meshFilter == null: {objectHighlighter.meshFilter == null}");
+        }
+
+
         selectedRegion = region;
+
+        objectHighlighter.transform.position = region.transform.position;
+        objectHighlighter.meshFilter.sharedMesh = region.mesh.sharedMesh;
+        objectHighlighter.gameObject.SetActive(true);
+
+        /*region.selected = true;
         foreach(var neighbor in selectedRegion.neighbors)
         {
             neighbor.highlighted = true;
-        }
+        }*/
     }
 
     private void RetreatUnitFromBattle(Battle battle)
