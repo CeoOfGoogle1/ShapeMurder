@@ -299,10 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f85839a360ee343bafaf54b18e90a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Region
-  regionRenderer: {fileID: 8093542923985685829}
+  mesh: {fileID: 6320517447461632399}
   ownerId: 0
-  selected: 0
-  highlighted: 0
   id: 0
   neighbors: []
   garrison:
@@ -392,7 +390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 29722276f5d3c95438a7e54b267a7a74, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 29722276f5d3c95438a7e54b267a7a74, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -414,6 +412,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6168773228674462616}
   m_SourcePrefab: {fileID: 100100000, guid: 29722276f5d3c95438a7e54b267a7a74, type: 3}
+--- !u!33 &6320517447461632399 stripped
+MeshFilter:
+  m_CorrespondingSourceObject: {fileID: -5754084199372789682, guid: 29722276f5d3c95438a7e54b267a7a74, type: 3}
+  m_PrefabInstance: {fileID: 7463484696277127617}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6924608459859359274 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 29722276f5d3c95438a7e54b267a7a74, type: 3}
@@ -436,8 +439,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11407f658e7e2f74296c38e2380735cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Colorizer
---- !u!23 &8093542923985685829 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 29722276f5d3c95438a7e54b267a7a74, type: 3}
-  m_PrefabInstance: {fileID: 7463484696277127617}
-  m_PrefabAsset: {fileID: 0}

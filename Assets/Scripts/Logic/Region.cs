@@ -6,12 +6,10 @@ using UnityEngine;
 public class Region : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Renderer regionRenderer;
-    [SerializeField] private Material outlineMaterial;
+    public MeshFilter mesh;
+
     [Header("Region Settings")]
     public int ownerId;
-    public bool selected;
-    public bool highlighted;
     public int id;
     public RegionType type;
     public List<Region> neighbors;
@@ -34,6 +32,11 @@ public class Region : MonoBehaviour
     [Header("Invasion Settings")]
     public Battle battle;
 
+    void Start()
+    {
+        
+    }
+
     void Update()
     {   
         if (NetworkManager.Singleton == null) return;
@@ -45,20 +48,6 @@ public class Region : MonoBehaviour
             if (Tick(ref sendTimer, sendTime)) SendArmy(garrison, sendSize, destination);
         }
         Grow();
-
-        if (selected)
-        {
-            
-        }
-        else
-        {
-
-        }
-
-        if (highlighted)
-        {
-            
-        }
     }
 
     void Grow()
