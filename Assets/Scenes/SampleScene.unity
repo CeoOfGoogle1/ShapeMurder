@@ -672,12 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5863c63cfde19b74ba8931f9873d96b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  player:
-    id: 1
-    networkId: 0
-    color: {r: 0, g: 0.5, b: 1, a: 1}
-    allies: 
-    playerStatus: 0
+  ShowTopMostFoldoutHeaderGroup: 1
   selectedRegion: {fileID: 0}
 --- !u!1 &1228013932
 GameObject:
@@ -993,6 +988,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 1228013933}
     m_Modifications:
     - target: {fileID: 2519129227073452919, guid: 690105408c6091c49b981e05edf7939a, type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2519129227073452919, guid: 690105408c6091c49b981e05edf7939a, type: 3}
+      propertyPath: ownerId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2519129227073452919, guid: 690105408c6091c49b981e05edf7939a, type: 3}
       propertyPath: player.id
       value: 2
       objectReference: {fileID: 0}
@@ -1000,6 +1003,10 @@ PrefabInstance:
       propertyPath: destination
       value: 
       objectReference: {fileID: 27312711}
+    - target: {fileID: 2519129227073452919, guid: 690105408c6091c49b981e05edf7939a, type: 3}
+      propertyPath: garrison.size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2519129227073452919, guid: 690105408c6091c49b981e05edf7939a, type: 3}
       propertyPath: garrison.speed
       value: 1
